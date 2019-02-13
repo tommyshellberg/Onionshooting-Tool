@@ -23,16 +23,16 @@ class App extends Component {
           <h1 className="App-title">Onionshooting Tool</h1>
         </header>
         <p className="App-intro">
-          To get started, type in a domain name.
+          To get started, type in either a full URL path or a domain name.
         </p>
         <Container className="fixed-width">
           <Row>
-            <Col sm={3}>
+            <Col sm={2}>
             </Col>
-            <Col sm={6}>
+            <Col sm={8}>
               <DomainSearch/>
             </Col>
-            <Col sm={3}>
+            <Col sm={2}>
             </Col>
           </Row>
         </Container>
