@@ -31,3 +31,7 @@
   max-width: 1200px;
   margin: auto;
 }
+
+.table td {
+  vertical-align: middle !important;
+}

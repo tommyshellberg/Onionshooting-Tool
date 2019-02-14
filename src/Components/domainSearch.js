@@ -4,9 +4,9 @@ import validator from 'validator'
 import axios from 'axios'
 import ResultsTable from './resultsTable'
 import parseDomain from 'parse-domain'
-import Fade from 'react-bootstrap/Fade'
 import { debounce } from "lodash";
 import ProgressBar from 'react-bootstrap/ProgressBar'
+import InternalError from './internalError'
 
 class DomainSearch extends Component {
 
@@ -21,7 +21,9 @@ class DomainSearch extends Component {
           expiry: '',
           dns: [],
           progress: 0,
-          notRegistered: null            
+          notRegistered: null,
+          isWooCommerce: null,
+          isWordPress: null            
         }
       }
 
@@ -69,8 +71,6 @@ class DomainSearch extends Component {
     queryWHOIS = (domain) => {
         axios.get(`https://cors-anywhere.herokuapp.com/http://dotnul.com/api/whois/${domain}`, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
           .then( response => {
-            // handle success
-            console.log(response.data)
             const whois = response.data.whois
             let notRegistered = whois.search("Domain Name:")
             if( notRegistered === -1 || whois==null || response.data.error === true ) {
@@ -89,9 +89,9 @@ class DomainSearch extends Component {
                 }
             })
           })
-          .then(this.digQuery(this.state.domain))
-          .then(this.pageQuery(this.state.url))
-          // .then(this.builtWithQuery())
+          .then( this.digQuery( this.state.domain ) )
+          .then( this.pageQuery( this.state.url ) )
+          //.then( this.builtWithQuery( this.state.domain ) )
           .catch(function (error) {
             // handle error
             console.log(error);
@@ -132,6 +132,41 @@ class DomainSearch extends Component {
         })
     }
 
+    builtWithQuery = (domain) => {
+        axios.get(`https://api.builtwith.com/v12/api.json?KEY=c6aa8caa-440a-4002-8aab-ad6d56d63951&LOOKUP=${domain}`, { headers: { 'content-type': 'application/x-www-form-urlencoded' } } )
+        .then( res => {
+            const technologies = res.data.Results[0].Result.Paths[0].Technologies
+            const isWordPress = technologies.find( e => e.Name==='WordPress') 
+            if(isWordPress) {
+                const isWooCommerce = technologies.find( e => e.Name === 'WooCommerce')
+                this.setState({
+                    isWordPress: true
+                })
+                if(isWooCommerce) {
+                    this.setState({
+                        isWooCommerce: true
+                    })
+                }
+            } else {
+                this.setState({
+                    isWordPress: false,
+                    isWooCommerce: false
+                })
+            }
+        })
+        .catch( err => {
+            console.log(err.message)
+        })
+    } 
+
+    updateProgress = (amount) => {
+        this.setState( prevState => {
+            return {
+                progress: prevState.progress + amount
+            }
+        })
+    }
+
     render() {
         let domainPresent = ((!this.state.domain || 0 === this.state.domain.length) ? false : true)
         return (
@@ -145,19 +180,22 @@ class DomainSearch extends Component {
                             value={this.state.url}/>
                         </Form.Group>
                     </Form>
-                    { this.state.domain && <Fade in={ domainPresent ? true : false }>
-                    <ResultsTable
-                    dns = {this.state.dns}
-                    whois = {this.state.whois}
-                    notRegistered = {this.state.notRegistered}
-                    expiry = {this.state.expiry}
-                    pageLookup = {this.state.pageLookup}
-                    responseCode = {this.state.responseCode} >
-                    </ResultsTable>
-                    </Fade> }
-                <ProgressBar>
+                    { domainPresent && <ResultsTable
+                    dns =               {this.state.dns}
+                    whois =             {this.state.whois}
+                    notRegistered =     {this.state.notRegistered}
+                    expiry =            {this.state.expiry}
+                    pageLookup =        {this.state.pageLookup}
+                    responseCode =      {this.state.responseCode} 
+                    updateProgress =    {this.updateProgress}
+                    isWooCommerce =     { this.state.isWooCommerce }
+                    isWordPress =       { this.state.isWordPress }
+                    />}
+                <h5>Tests Progress:</h5>
+                <ProgressBar style={{ marginBottom: '2em' }}>
                     <ProgressBar animated striped variant="success" now={this.state.progress} key={1} />
                 </ProgressBar>
+                { this.state.responseCode===500 && <InternalError/> }
                 </Fragment>
                )
     }
