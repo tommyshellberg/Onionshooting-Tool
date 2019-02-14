@@ -91,7 +91,7 @@ class DomainSearch extends Component {
           })
           .then( this.digQuery( this.state.domain ) )
           .then( this.pageQuery( this.state.url ) )
-          //.then( this.builtWithQuery( this.state.domain ) )
+          .then( this.builtWithQuery( this.state.domain ) )
           .catch(function (error) {
             // handle error
             console.log(error);
