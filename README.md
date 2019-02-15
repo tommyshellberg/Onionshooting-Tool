@@ -4,6 +4,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 "Onionshooting" is a coined term which loosely describes the methodical method for troubleshooting a downed/broken website or webpage. If you visited a webpage and was met with a completely blank response in your browser, this tool would help you figure out what is going wrong.
 
+## Setup
+
+As this is a Create React App project, you should be able to simply clone it to your local environment and run `npm install` to install dependencies. Run `npm start` to run the app; the app should open automatically. If not, open `http://localhost:3000` in your browser afterward. Run `npm run build` to compile the production build of the app. Publish to something like Netlify(free) if you'd like.
+
 ### Domain lookups
 
 The outermost layer of the onion is the domain itself. This tool will parse the domain from the text input field and perform a WHOIS lookup to make sure the domain is 1) actually registered and 2) not expired.
