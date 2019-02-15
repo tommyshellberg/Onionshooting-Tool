@@ -7,6 +7,7 @@ import parseDomain from 'parse-domain'
 import { debounce } from "lodash";
 import ProgressBar from 'react-bootstrap/ProgressBar'
 import InternalError from './internalError'
+import {builtWith} from '../keys.json'
 
 class DomainSearch extends Component {
 
@@ -133,7 +134,7 @@ class DomainSearch extends Component {
     }
 
     builtWithQuery = (domain) => {
-        axios.get(`https://api.builtwith.com/v12/api.json?KEY=c6aa8caa-440a-4002-8aab-ad6d56d63951&LOOKUP=${domain}`, { headers: { 'content-type': 'application/x-www-form-urlencoded' } } )
+        axios.get(`https://api.builtwith.com/v12/api.json?KEY=${builtWith}&LOOKUP=${domain}`, { headers: { 'content-type': 'application/x-www-form-urlencoded' } } )
         .then( res => {
             const technologies = res.data.Results[0].Result.Paths[0].Technologies
             const isWordPress = technologies.find( e => e.Name==='WordPress') 
