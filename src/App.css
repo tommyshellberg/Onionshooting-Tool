@@ -35,3 +35,7 @@
 .table td {
   vertical-align: middle !important;
 }
+
+img.techlogo {
+  max-width: 3rem;
+}

@@ -1,33 +1,37 @@
 import React, {Fragment} from 'react'
-import Alert from 'react-bootstrap/Alert'
+import WPLogo from '../img/wordpress.svg'
+import WCLogo from '../img/woocommerce.svg'
+
+const DisplayWPIcon = (prop) => {
+    return (
+        <img 
+        alt="WordPress logo"
+        style={prop}
+        className="techlogo" 
+        src={WPLogo}></img>
+    )
+}
+
+const DisplayWCIcon = (prop) => {
+    return (
+        <img 
+        alt="WooCommerce logo"
+        style={prop}
+        className="techlogo" 
+        src={WCLogo}></img>
+    )
+}
 
 const BuiltWith = ( props ) => {
     return(
         <Fragment>
             <tr>
                 <td>
-                    Is this a WordPress site?
+                    WordPress/WooCommerce site?
                 </td>
-                <td>
-                    {props.isWordPress ? "Yes" : "No"}
-                </td>
-                <td>
-                    <Alert variant={props.isWordPress ? "success" : "danger"}>
-                        {props.isWordPress ? "Pass" : "Fail"}
-                    </Alert>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Is this a WooCommerce site?
-                </td>
-                <td>
-                    {props.isWooCommerce ? "Yes" : "No"}
-                </td>
-                <td>
-                    <Alert variant={props.isWooCommerce ? "success" : "danger"}>
-                        {props.isWooCommerce ? "Pass" : "Fail"}
-                    </Alert>
+                <td colSpan="2">
+                    <DisplayWPIcon opacity= {props.isWordPress ?  1: .2 } />
+                    <DisplayWCIcon opacity= {props.isWooCommerce ? 1: .2 } />
                 </td>
             </tr>
         </Fragment>
